@@ -16,7 +16,7 @@ import { changeFilter, changeIsSaved, changeMembers, changeShoppingListItems, ch
 import { changeUser, changeUserType } from "../entities/reducer_user";
 import { changeIsActive } from "../entities/reducer_modal";
 
-const mock = new AxiosMockAdapter(axios, { delayResponse: 100 });
+const mock = new AxiosMockAdapter(axios, { delayResponse: 1000 });
 
 const api = (store) => (next) => async (action) => {
 
