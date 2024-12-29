@@ -227,6 +227,14 @@ export const SelectState = () => {
     const store = useStore()
 
     const [handlerstate, setHandlerState] = useState("none")
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
+
+    store.subscribe(() => {
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
+    })
+
     function StateButtonHandler(name) {
 
         if(name != handlerstate){
@@ -236,37 +244,37 @@ export const SelectState = () => {
     }
 
     const arrVariants = [
-        {name: "Finished", icon: mdiCheck, color:"#4ade80", buttonClass:`
+        {name: "Finished", nameCZ: "Hotovo", icon: mdiCheck, color:"#4ade80", buttonClass:`
             w-full h-full border-[3px] border-green-400 rounded-lg
             hover:border-[4px] active:border-[5px] 
             flex justify-center items-center`,
             lineColor:"bg-green-400 w-full flex justify-center"
         },
-        {name: "In progress", icon: mdiChevronDoubleRight, color:"#22d3ee", buttonClass:`
+        {name: "In progress", nameCZ: "Probíhá", icon: mdiChevronDoubleRight, color:"#22d3ee", buttonClass:`
             w-full h-full border-[3px] border-cyan-400 rounded-lg
             hover:border-[4px] active:border-[5px]
             flex justify-center items-center`,
             lineColor:"bg-cyan-400 w-full flex justify-center"
         },
-        {name: "Waiting", icon: mdiClockOutline, color:"#facc15", buttonClass:`
+        {name: "Waiting", nameCZ: "Čeká", icon: mdiClockOutline, color:"#facc15", buttonClass:`
             w-full h-full border-[3px] border-yellow-400 rounded-lg
             hover:border-[4px] active:border-[5px]
             flex justify-center items-center`,
             lineColor:"bg-yellow-400 w-full flex justify-center"
         },
-        {name: "Delayed", icon: mdiClockAlertOutline, color:"#f97316", buttonClass:`
+        {name: "Delayed", nameCZ: "Zpožděno", icon: mdiClockAlertOutline, color:"#f97316", buttonClass:`
             w-full h-full border-[3px] border-orange-500 rounded-lg
             hover:border-[4px] active:border-[5px]
             flex justify-center items-center`,
             lineColor:"bg-orange-500 w-full flex justify-center" 
         },
-        {name: "Canceled", icon: mdiClose, color:"#dc2626", buttonClass:`
+        {name: "Canceled", nameCZ: "Zrušeno", icon: mdiClose, color:"#dc2626", buttonClass:`
             w-full h-full border-[3px] border-red-600 rounded-lg
             hover:border-[4px] active:border-[5px]
             flex justify-center items-center`,
             lineColor:"bg-red-600 w-full flex justify-center" 
         },
-        {name: "None", icon: mdiDotsHorizontal, color:"#94a3b8", buttonClass:`
+        {name: "None", nameCZ: "Žádný", icon: mdiDotsHorizontal, color:"#94a3b8", buttonClass:`
             w-full h-full border-[3px] border-slate-400 rounded-lg
             hover:border-[4px] active:border-[5px]
             flex justify-center items-center`,
@@ -285,7 +293,10 @@ export const SelectState = () => {
     w-[calc(100%/6.5)] h-full p-[6px] relative
     ">
         <div className="absolute w-[calc(100%_-_13px)] h-fit -top-4 flex justify-center font-semibold text-sm text-nowrap">
-            {e.name}
+            {
+                (language == "en") ? e.name : (
+                (language == "cz") ? e.nameCZ : e.name)
+            }
         </div>
         <div className={e.buttonClass}>
             <Icon path={e.icon} size={1.1} color={e.color}/>
@@ -295,7 +306,10 @@ export const SelectState = () => {
     w-[calc(100%-100%/6.5*5)] h-full px-[4px] py-[1px] relative 
     ">
         <div className="absolute w-[calc(100%_-_10px)] h-fit -top-[28px] flex justify-center font-semibold">
-            {e.name}
+            {
+                (language == "en") ? e.name : (
+                (language == "cz") ? e.nameCZ : e.name)
+            }
         </div>
         <div className={e.lineColor}>
             <div className="absolute w-[calc(100%_-_24px)] bg-inherit h-[3px] -top-[4px]"/>
