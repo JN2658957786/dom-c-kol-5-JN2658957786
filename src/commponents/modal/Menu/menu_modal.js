@@ -30,10 +30,15 @@ const Modal = () => {
     const [ownerID, setOwnerID] = useState(store.getState().entities.userReducer.id)
     const [listsDetail, setListsDetail] = useState(store.getState().entities.menuReducer.list)
     const [detail, setDetail] = useState({id: "-1", name: ""})
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
     store.subscribe(() => {
         setOwnerID(store.getState().entities.userReducer.id)
         setListsDetail(store.getState().entities.menuReducer.list)
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })
 
 
@@ -128,7 +133,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Shopping lists
+                    {
+                        (language == "en") ? "Shopping lists" : (
+                        (language == "cz") ? "Nákupní seznamy" : "Shopping lists")
+                    }
                 </div>
 
                 <div className="w-full grow pb-16 overflow-y-scroll no-scrollbar">
@@ -147,7 +155,10 @@ return<>
                         font-semibold
                         flex items-center justify-center
                         ">
-                            Add new shopping list
+                            {
+                                (language == "en") ? "Add new shopping list" : (
+                                (language == "cz") ? "Přidat nový nákupní seznam" : "Add new shopping list")
+                            }
                         </button>
 
                     </div>}

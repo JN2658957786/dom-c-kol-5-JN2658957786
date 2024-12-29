@@ -26,6 +26,8 @@ const SetStateModal = () => {
 const [selectedItem, setSelectedItem] = useState({})
 const [newItemName, setNewItemName] = useState(store.getState().entities.modalReducer.modal.name)
 const [newState, setNewState] = useState(store.getState().entities.modalReducer.modal.state)
+const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
 
 store.subscribe(() => {
@@ -44,6 +46,9 @@ store.subscribe(() => {
 
     setNewItemName(store.getState().entities.modalReducer.modal.name)
     setNewState(store.getState().entities.modalReducer.modal.state)
+
+    const newL = store.getState().entities.languagesReducer.currentL
+    if(language != newL) setLanguage(newL)
 })
 
 
@@ -144,7 +149,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Set state
+                    {
+                        (language == "en") ? "Set state" : (
+                        (language == "cz") ? "Nastavit stav" : "Set state")
+                    }
                 </div>
                 <div className="
                 w-full h-fit
@@ -206,7 +214,11 @@ return<>
                                 <div className="absolute -top-[10px] left-2 bg-slate-50">
                                     <Icon path={mdiClose} size={0.75}/>
                                 </div>
-                                Cancel
+                                {
+                                    (language == "en") ? "Cancel" : (
+                                        (language == "cz") ? "Zrušit" : "Cancel"
+                                    )
+                                }
                             </button>
 
                             <div className="grow"/>
@@ -228,7 +240,11 @@ return<>
                                 <div className="absolute -top-[10px] right-2 bg-slate-50">
                                     <Icon path={mdiCheck} size={0.75}/>
                                 </div>
-                                Confirm
+                                {
+                                    (language == "en") ? "Confirm" : (
+                                        (language == "cz") ? "Potvrdit" : "Confirm"
+                                    )
+                                }
                             </button>
                         </div>
                     </div>

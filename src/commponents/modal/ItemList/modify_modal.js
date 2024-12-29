@@ -33,6 +33,8 @@ const Modal = () => {
     const [selectedItem, setSelectedItem] = useState({})
     const [newItemName, setNewItemName] = useState("New item")
     const [newState, setNewState] = useState(store.getState().entities.modalReducer.modal.state)
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
     if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "modify"){
         store.subscribe(() => {
@@ -51,6 +53,9 @@ const Modal = () => {
 
             setNewItemName(store.getState().entities.modalReducer.modal.name)
             setNewState(store.getState().entities.modalReducer.modal.state)
+
+            const newL = store.getState().entities.languagesReducer.currentL
+            if(language != newL) setLanguage(newL)
         })
     }
 
@@ -105,7 +110,10 @@ const Modal = () => {
             bg-slate-50
             font-semibold text-sm text-sky-400
             ">
-                New item
+                {
+                    (language == "en") ? "New item" : (
+                    (language == "cz") ? "Nová položka" : "New item")
+                }
             </div>}
             {isNew == false && <div className="
             absolute left-2 -top-3
@@ -113,7 +121,10 @@ const Modal = () => {
             bg-slate-50
             font-semibold text-sm text-sky-400
             ">
-                Old item
+                {
+                    (language == "en") ? "Old item" : (
+                    (language == "cz") ? "Stará položka" : "Old item")
+                }
             </div>}
 
             <div 
@@ -168,7 +179,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Update item
+                    {
+                        (language == "en") ? "Update item" : (
+                        (language == "cz") ? "Aktualizovat položku" : "Update item")
+                    }
                 </div>
 
                 {/* modal body */}
@@ -204,13 +218,23 @@ return<>
                         w-full h-fit -translate-y-4
                         ">
                             {/* Name */}
-                            <div className="font-semibold">name:</div>
+                            <div className="font-semibold">
+                                {
+                                    (language == "en") ? "Name:" : (
+                                    (language == "cz") ? "Jméno:" : "Name:")
+                                }
+                            </div>
                             <div className="w-full h-10 border-2 border-slate-200 rounded-lg">
                                 <FormChangeName/>
                             </div>
 
                             {/* Cost per item */}
-                            <div className="pt-2 font-semibold">cost per item:</div>
+                            <div className="pt-2 font-semibold">
+                                {
+                                    (language == "en") ? "cost per item:" : (
+                                    (language == "cz") ? "cena za položku:" : "cost per item:")
+                                }
+                            </div>
                             <div className="w-full h-10 flex">
                                 <div className="grow h-full border-2 border-slate-200 rounded-s-lg">
                                     <FormChangeCost/>
@@ -222,13 +246,23 @@ return<>
                             </div>
 
                             {/* Count */}
-                            <div className="font-semibold">count:</div>
+                            <div className="font-semibold">
+                                {
+                                    (language == "en") ? "count:" : (
+                                    (language == "cz") ? "počet:" : "count:")
+                                }
+                            </div>
                             <div className="w-full h-10 border-2 border-slate-200 rounded-lg">
                                 <FormChangeCount/>
                             </div>
 
                             {/* Description */}
-                            <div className="pt-2 font-semibold">description:</div>
+                            <div className="pt-2 font-semibold">
+                                {
+                                    (language == "en") ? "description:" : (
+                                    (language == "cz") ? "popis:" : "description:")
+                                }
+                            </div>
                             <div className="w-full h-[120px] border-2 border-slate-200 rounded-lg">
                                 <FormChangeDsc/>
                             </div>
@@ -265,7 +299,11 @@ return<>
                             <div className="absolute -top-[10px] left-2 bg-slate-50">
                                 <Icon path={mdiClose} size={0.75}/>
                             </div>
-                            Cancel
+                            {
+                                (language == "en") ? "Cancel" : (
+                                    (language == "cz") ? "Zrušit" : "Cancel"
+                                )
+                            }
                         </button>
 
                         <div className="grow"/>
@@ -286,7 +324,11 @@ return<>
                             <div className="absolute -top-[10px] right-2 bg-slate-50">
                                 <Icon path={mdiCheck} size={0.75}/>
                             </div>
-                            Confirm
+                            {
+                                (language == "en") ? "Confirm" : (
+                                    (language == "cz") ? "Potvrdit" : "Confirm"
+                                )
+                            }
                         </button>
                     </div>
                 </div>

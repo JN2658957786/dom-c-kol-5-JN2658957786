@@ -12,11 +12,16 @@ const Modal = () => {
     const store = useStore()
 
     const [filter, setFilter] = useState(store.getState().entities.shoppingListReducer.settings.filter)
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
     
     store.subscribe(() => {
         if(store.getState().entities.shoppingListReducer.settings.filter != filter){
             setFilter(store.getState().entities.shoppingListReducer.settings.filter)
         }
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })
 
     function stateCheck(name){
@@ -38,27 +43,34 @@ const Modal = () => {
         let isVisible = true
         if(name == "Archived" || name == "Non_Archived")isVisible = false
 
+        let tempDisplayName = name
+        if(name == "Non_Archived") tempDisplayName = "Non-Archived"
+        if(language == "cz") {
+            if(name == "Archived") tempDisplayName = "Archivové"
+            if(tempDisplayName == "Non-Archived" ) tempDisplayName = "Nearchivované"
+        }
+
     return<>
         <button
         onClick={() => {changeMode()}}
         className="w-12 h-12 justify-self-center">
-            {isVisible == true && StatePreview(true, "", name)}
-            {isVisible == false && <div className="flex items-center font-semibold">
-                {name}
+            {isVisible == true && StatePreview(true, "", name, "rounded-t-lg")}
+            {isVisible == false && <div className="flex items-center text-nowrap font-semibold">
+                {tempDisplayName}
             </div>}
 
-            <div className="h-2"/>
+            <div className="h-1"/>
 
             {state == true && <div className="
             w-12 h-12
-            border-[3px] border-green-400 rounded-lg
+            border-[3px] border-green-400 rounded-b-lg
             flex items-center justify-center
             ">
                 <Icon path={mdiCheck} size={1} color={"#4ade80"}/>
             </div>}
             {state == false && <div className="
             w-12 h-12
-            border-[3px] border-red-600 rounded-lg
+            border-[3px] border-red-600 rounded-b-lg
             flex items-center justify-center
             ">
                 <Icon path={mdiClose} size={1} color={"#dc2626"}/>
@@ -103,7 +115,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Filter items
+                    {
+                        (language == "en") ? "Filter items" : (
+                        (language == "cz") ? "Filtrovat položky" : "Filter items")
+                    }
                 </div>
                 
                 <div className="

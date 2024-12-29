@@ -15,10 +15,35 @@ const Detail = () => {
     const [listName, setListName] = useState("")
     const [userID, setUserID] = useState("")
     const [userType, setUseType] = useState("none")
+
+
+    const [themeR, setThemeR] = useState(store.getState().entities.themeReducer)
+    const [currentTheme, setCurrentTheme] = useState(null)
+
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
+
+
+    useEffect(() => {
+        const mode = store.getState().entities.themeReducer.currentMode
+        setCurrentTheme(themeR[mode])
+    })
+
+    store.subscribe(() => {
+        if(store.getState().entities.themeReducer != themeR) {
+            const reducer = store.getState().entities.themeReducer
+            setThemeR(reducer)
+            setCurrentTheme(themeR[reducer.currentMode])
+        }
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
+    })
+
     
     const [slateClass, setSlateClass] = useState(`
         px-8 py-4
-        w-[calc(4*40px)] h-10
+        ${(language == "en") ? "w-[160px]" : "w-[220px]"} h-10
         border-4 border-slate-400 saturate-150 rounded-xl
         flex items-center justify-center
         cursor-default
@@ -26,7 +51,7 @@ const Detail = () => {
     `)
     const [redClass, setRedClass] = useState(`
         px-8 py-4
-        w-[calc(4*40px)] h-10
+        ${(language == "en") ? "w-[160px]" : "w-[220px]"} h-10
         border-4 border-red-600 saturate-150 rounded-xl
         hover:border-[5px]
         flex items-center justify-center
@@ -125,8 +150,8 @@ if(store.getState().entities.tabsReducer.openTab == 'Detail'){
     }
 
 
-return<>
-{userType != "none" && isVisible == true && <div className="
+return( <>
+{userType != "none" && isVisible == true && currentTheme && <div className="
 w-full h-full
 flex flex-col
 ">
@@ -139,11 +164,11 @@ flex flex-col
         hover:border-[6px]
         relative
         ">
-            {userType == "owner" && <div className="absolute -top-[14px] right-[14px] bg-slate-50">
+            {userType == "owner" && <div className={`absolute -top-[14px] right-[14px] ${currentTheme.background}`}>
                 <Icon path={mdiPencil} size={1} color={"#38bdf8 "}/>
             </div>}
 
-            <div className="font-bold text-xl">
+            <div className="font-bold text-xl" style={{color: currentTheme.iconHEX}}>
                 {listName}
             </div>
         </button>
@@ -158,14 +183,20 @@ flex flex-col
         <button
         onClick={() => leaveListHandler()}
         className={leaveClass}>
-            {userType != "owner" && <div className="absolute -top-[12px] left-2 bg-slate-50">
+            {userType != "owner" && <div className={`absolute -top-[12px] left-2 ${currentTheme.background}`}>
                 <Icon path={mdiClose} size={0.85} color={"#dc2626"}/>
             </div>}
-            {userType == "owner" &&<div className="font-semibold text-nowrap text-slate-500 cursor-default">
-                Leave this list
+            {userType == "owner" &&<div
+            className="font-semibold text-nowrap text-slate-500 cursor-default"
+            style={{color: currentTheme.textHEX}}
+            >
+                {(language == "en") ? "Leave this list" : (languageR[language].leaveThisList)}
             </div>}
-            {userType != "owner" &&<div className="font-semibold text-nowrap">
-                Leave this list
+            {userType != "owner" &&<div
+            className="font-semibold text-nowrap"
+            style={{color: currentTheme.iconHEX}}
+            >
+                {(language == "en") ? "Leave this list" : (languageR[language].leaveThisList)}
             </div>}
         </button>
         <button 
@@ -183,14 +214,20 @@ flex flex-col
         <button
         onClick={() => deleteListHandler()}
         className={deleteClass}>
-            {userType == "owner" && <div className="absolute -top-[12px] left-2 bg-slate-50">
+            {userType == "owner" && <div className={`absolute -top-[12px] left-2 ${currentTheme.background}`}>
                 <Icon path={mdiClose} size={0.85} color={"#dc2626"}/>
             </div>}
-            {userType != "owner" &&<div className="font-semibold text-nowrap text-slate-500 cursor-default">
-                Delete this list
+            {userType != "owner" &&<div
+            className="font-semibold text-nowrap text-slate-500 cursor-default"
+            style={{color: currentTheme.textHEX}}
+            >
+                {(language == "en") ? "Delete this list" : (languageR[language].deleteThisList)}
             </div>}
-            {userType == "owner" &&<div className="font-semibold text-nowrap">
-                Delete this list
+            {userType == "owner" &&<div
+            className="font-semibold text-nowrap"
+            style={{color: currentTheme.iconHEX}}
+            >
+                {(language == "en") ? "Delete this list" : (languageR[language].deleteThisList)}
             </div>}
         </button>
         <button 
@@ -206,6 +243,6 @@ flex flex-col
     "/>
 </div>}
 
-</>}
+</>)}
 
 export default Detail

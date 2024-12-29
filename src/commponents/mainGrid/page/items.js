@@ -30,6 +30,16 @@ const List = () => {
     const [filter, setFilter] = useState(store.getState().entities.shoppingListReducer.settings.filter)
     const [isVisible, setIsVisible] = useState(true)
 
+    const [themeR, setThemeR] = useState(store.getState().entities.themeReducer)
+    const [currentTheme, setCurrentTheme] = useState(null)
+
+
+    ///
+    useEffect(() => {
+        const mode = store.getState().entities.themeReducer.currentMode
+        setCurrentTheme(themeR[mode])
+    })
+
     //store subscribe
     if(store.getState().entities.tabsReducer.openTab == 'Shopping list'){
         store.subscribe(() =>{
@@ -54,6 +64,12 @@ const List = () => {
                 
             } else {
                 setIsVisible(false)
+            }
+
+            if(store.getState().entities.themeReducer != themeR) {
+                const reducer = store.getState().entities.themeReducer
+                setThemeR(reducer)
+                setCurrentTheme(themeR[reducer.currentMode])
             }
         })
     }
@@ -238,6 +254,8 @@ const List = () => {
         } else {
             if(filter["Non_Archived"] == false) return
         }
+
+        if(!currentTheme) return;
         
         return<div className="
         w-full h-12
@@ -248,46 +266,49 @@ const List = () => {
                 // console.log(`clicked on item id:${e.id}`)
                 buttonHandler(e)
             }}
-            className="
+            className={`
             w-full h-full
-            bg-slate-200/50
-            hover:bg-slate-300/65
-            active:bg-sky-400
+            ${currentTheme.itemDefaultD}
+            ${currentTheme.itemHoverD}
+            ${currentTheme.itemActiveD}
             flex
-            ">
+            `}>
                 <div className="w-[3px] h-full flex flex-col">
-                    <div className="w-full h-2 bg-slate-50"/>
+                    <div className={`w-full h-2 ${currentTheme.background}`}/>
                     <div className="w-full grow"/>
-                    <div className="w-full h-2 bg-slate-50"/>
+                    <div className={`w-full h-2 ${currentTheme.background}`}/>
                 </div>
-                <div className="
+                <div className={`
                 w-[calc(100%_-_3px)] h-full
-                bg-slate-50
+                ${currentTheme.background}
                 flex
-                ">
+                `}>
                     <div className="w-1"/>
-                    <div className="
+                    <div className={`
                     w-full h-full
                     rounded-s-lg
-                    border-2 border-e-0 border-sky-400
-                    bg-slate-50
+                    border-2 border-e-0 ${currentTheme.itemBorder}
+                    ${currentTheme.background}
                     flex items-center
-                    ">
+                    `}>
                         <div className="w-[4px]"/>
-                        <div className="
+                        <div className={`
                         py-1 pl-1 w-full h-full
-                        ">
-                            <div className="
+                        `}>
+
+                            <div
+                            className={`
                             p-1 pl-4
-                            w-full h-full
+                            max-w-[calc(500px-135px)] w-full h-full
                             saturate-150
                             border-0
-                            hover:border-slate-200  hover:border-2
-                            active:border-slate-200 active:border-4
+                            ${currentTheme.itemHover}
+                            ${currentTheme.itemActive}
                             rounded-lg
                             flex items-center justify-start
-                            font-semibold text-nowrap
-                            ">
+                            font-semibold text-nowrap overflow-x-auto overflow-y-hidden`}
+                            style={{scrollbarWidth: "thin", color: currentTheme.iconHEX}}
+                            >
                                 {e.name}
                             </div>
                         </div>
@@ -298,36 +319,36 @@ const List = () => {
 
             </button>
 
-            <div className="
-            border-2 border-s-0 border-sky-400
+            <div className={`
+            border-2 border-s-0 ${currentTheme.itemBorder}
             rounded-e-lg
             flex
-            ">
+            `}>
                 {userType == "owner" && <div className="
                 w-6 h-full py-[2px]
                 flex flex-col
                 ">
                     <button
                     onClick={() => moveHandler(e, true)}
-                    className="
+                    className={`
                     w-full h-1/2
-                    border-2 border-slate-200
+                    border-2 ${(themeR.currentMode == "whiteMode") ? "border-slate-200" : "border-slate-600"}
                     hover:border-slate-300
                     rounded-t-md
                     flex justify-center items-center
-                    ">
-                        <Icon path={mdiChevronUp} size={1}/>
+                    `}>
+                        <Icon path={mdiChevronUp} size={1} color={currentTheme.iconHEX}/>
                     </button>
                     <button
                     onClick={() => moveHandler(e, false)}
-                    className="
+                    className={`
                     w-full h-1/2
-                    border-2 border-slate-200
+                    border-2 ${(themeR.currentMode == "whiteMode") ? "border-slate-200" : "border-slate-600"}
                     hover:border-slate-300
                     rounded-b-md
                     flex justify-center items-center
-                    ">
-                        <Icon path={mdiChevronDown} size={1}/>
+                    `}>
+                        <Icon path={mdiChevronDown} size={1} color={currentTheme.iconHEX}/>
                     </button>
                 </div>}
 
@@ -347,22 +368,22 @@ const List = () => {
         </div>}
     )
 
-    // console.log("!!!", store.getState().entities.userReducer.type)
-
 return<>
-<div className="
+{currentTheme && <div className="
 w-full h-full
 flex flex-col
 ">
-    {isVisible == true && <div className={gridClass}>
-        {userType != "none" && listItems}
-    </div>}
+    <div className="h-full" style={{maxWidth: "100%", width: `${(gridCols == 1) ? "500px" : "1000px"}`, alignSelf: "center"}}>
+        {isVisible == true && <div className={gridClass}>
+            {userType != "none" && listItems}
+        </div>}
+    </div>
     <div
     onClick={() => store.dispatch(changeUpdateMode({mode: "none"}))}
     className="
     w-full h-[100vh]
     "/>
-</div>
+</div>}
 
 </>}
 

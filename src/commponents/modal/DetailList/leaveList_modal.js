@@ -23,10 +23,12 @@ const Modal = () => {
     const [selectedItem, setSelectedItem] = useState({})
     const [shoppingListName, setShoppingListName] = useState(store.getState().entities.shoppingListReducer.settings.name)
 
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
+
+
 if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "delete"){
     store.subscribe(() => {
-        // console.log("!!! selectedItem:", selectedItem)
-
         const itemIndex = store.getState().entities.shoppingListReducer.updateItem.selectedItem
         let arr = [...store.getState().entities.shoppingListReducer.members]
 
@@ -38,6 +40,9 @@ if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "delet
         }
         setSelectedItem(store.getState().entities.shoppingListReducer.members[index])
         setShoppingListName(store.getState().entities.shoppingListReducer.settings.name)
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })
 }
 
@@ -90,7 +95,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Delete item
+                    {
+                        (language == "en") ? "Leave shopping list" : (
+                        (language == "cz") ? "Opustit nákupní seznam" : "Leave shopping list")
+                    }
                 </div>
 
                 {/* modal body */}
@@ -107,7 +115,10 @@ return<>
                         w-full h-8
                         font-semibold
                         ">
-                            Are you sure you want to leave this shopping list?
+                            {
+                                (language == "en") ? "Are you sure you want to leave this shopping list?" : (
+                                (language == "cz") ? "Opravdu chcete opustit tento nákupní seznam?" : "Are you sure you want to leave this shopping list?")
+                            }
                         </div>
 
                         <div className="h-4"/>
@@ -159,7 +170,11 @@ return<>
                             <div className="absolute -top-[10px] left-2 bg-slate-50">
                                 <Icon path={mdiClose} size={0.75}/>
                             </div>
-                            Cancel
+                            {
+                                (language == "en") ? "Cancel" : (
+                                    (language == "cz") ? "Zrušit" : "Cancel"
+                                )
+                            }
                         </button>
 
                         <div className="grow"/>
@@ -181,7 +196,11 @@ return<>
                             <div className="absolute -top-[10px] right-2 bg-slate-50">
                                 <Icon path={mdiDeleteOutline} size={0.75}/>
                             </div>
-                            Confirm
+                            {
+                                (language == "en") ? "Confirm" : (
+                                    (language == "cz") ? "Potvrdit" : "Confirm"
+                                )
+                            }
                         </button>
                     
                     </div>

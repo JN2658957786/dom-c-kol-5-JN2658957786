@@ -37,6 +37,8 @@ const Modal = (props) => {
     const [selectedItem, setSelectedItem] = useState({})
     const [newItemName, setNewItemName] = useState("New item")
     const [newState, setNewState] = useState("none")
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
     if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "addUp" || store.getState().entities.shoppingListReducer.updateItem.updateMode == "addDown"){
         store.subscribe(() => {
@@ -57,6 +59,9 @@ const Modal = (props) => {
                 setNewItemName(store.getState().entities.modalReducer.membersModal.name)
                 setNewState(store.getState().entities.modalReducer.membersModal.state)
             }
+
+            const newL = store.getState().entities.languagesReducer.currentL
+            if(language != newL) setLanguage(newL)
         })
     }
 
@@ -133,7 +138,10 @@ const Modal = (props) => {
             bg-slate-50
             font-semibold text-sm text-sky-400
             ">
-                New member
+                {
+                    (language == "en") ? "New member" : (
+                    (language == "cz") ? "Nový člen" : "New member")
+                }
             </div>}
             <div 
             className="
@@ -195,7 +203,14 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    {props.name}
+                    {
+                        (language == "en") ? props.name : (
+                        (language == "cz") ? (
+                            (props.name == "add up") ? "přidat nahoru" : (
+                                (props.name == "add down") ? "přidat dolu" : ""
+                            )
+                        ) : props.name)
+                    }
                 </div>
 
                 {/* modal body */}
@@ -239,7 +254,12 @@ return<>
                             w-full h-full pt-4
                             ">
                                 {/* Name */}
-                                <div className="font-semibold">name:</div>
+                                <div className="font-semibold">
+                                    {
+                                        (language == "en") ? "name:" : (
+                                        (language == "cz") ? "jméno:" : "name:")
+                                    }
+                                </div>
                                 <div className="w-full h-10 border-2 border-slate-200 rounded-lg">
                                     <FormChangeMemberName/>
                                 </div>
@@ -269,7 +289,11 @@ return<>
                                     <div className="absolute -top-[10px] left-2 bg-slate-50">
                                         <Icon path={mdiClose} size={0.75}/>
                                     </div>
-                                    Cancel
+                                    {
+                                        (language == "en") ? "Cancel" : (
+                                            (language == "cz") ? "Zrušit" : "Cancel"
+                                        )
+                                    }
                                 </button>
 
                                 <div className="grow"/>
@@ -290,7 +314,11 @@ return<>
                                     <div className="absolute -top-[10px] right-2 bg-slate-50">
                                         <Icon path={mdiCheck} size={0.75}/>
                                     </div>
-                                    Confirm
+                                    {
+                                        (language == "en") ? "Confirm" : (
+                                            (language == "cz") ? "Potvrdit" : "Confirm"
+                                        )
+                                    }
                                 </button>
                             </div>
                         </div>

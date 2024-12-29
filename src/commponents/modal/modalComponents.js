@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useStore } from 'react-redux'
 import { 
     changeModalDefault,
@@ -31,17 +31,36 @@ import {
 
 export const SpaceQuitButton = ({toDefault = false}) => {
     const store = useStore()
+
+    const [themeR, setThemeR] = useState(store.getState().entities.themeReducer)
+    const [currentTheme, setCurrentTheme] = useState(null)
+
+    useEffect(() => {
+        const mode = store.getState().entities.themeReducer.currentMode
+        setCurrentTheme(themeR[mode])
+    },[])
+
+    store.subscribe(() => {
+        if(store.getState().entities.themeReducer != themeR) {
+            const reducer = store.getState().entities.themeReducer
+            setThemeR(reducer)
+            if(typeof mode == "string") setCurrentTheme(themeR[reducer.currentMode])
+            if(typeof mode == "number") setCurrentTheme(themeR["customMode"][reducer.currentMode])
+        }
+    })
+
 return<>
-    <button
+    {currentTheme && <button
     onClick={() => {
         store.dispatch(changeModalDefault())
         store.dispatch(changeIsActive({isActive: false}))
         if(toDefault) store.dispatch(changeUpdateMode({mode: "none"}))
     }}
-    className="
+    className={`
     w-full h-full
     cursor-default
-    "/>
+    ${currentTheme.modalSpace}
+    `}/>}
 </>}
 export const QuitButton = ({toDefault = false}) => {
     const store = useStore()
@@ -298,7 +317,7 @@ flex flex-row
     {listItems}
 </div>
 </>}
-export const StatePreview = (isNew, selectedItem, newState) => {
+export const StatePreview = (isNew, selectedItem, newState, radius = "rounded-lg") => {
     let variant = ""
     if(selectedItem) variant = selectedItem.state
     if(isNew){
@@ -307,43 +326,43 @@ export const StatePreview = (isNew, selectedItem, newState) => {
 
     switch(variant){
         case "Finished": {return<>
-            <div className="w-full h-full border-[3px] flex justify-center items-center
-            border-green-400 rounded-lg">
+            <div className={`w-full h-full border-[3px] flex justify-center items-center
+            border-green-400 ${radius}`}>
                 <Icon path={mdiCheck} size={1} color={"#4ade80"}/>
             </div>
         </>}
             break;
         case "In progress": {return<>
-            <div className="w-full h-full border-[3px] flex justify-center items-center
-            border-cyan-400 rounded-lg">
+            <div className={`w-full h-full border-[3px] flex justify-center items-center
+            border-cyan-400 ${radius}`}>
                 <Icon path={mdiChevronDoubleRight} size={1} color={"#22d3ee"}/>
             </div>
         </>}
             break;
         case "Waiting": {return<>
-            <div className="w-full h-full border-[3px] flex justify-center items-center
-            border-yellow-400 rounded-lg">
+            <div className={`w-full h-full border-[3px] flex justify-center items-center
+            border-yellow-400 ${radius}`}>
                 <Icon path={mdiClockOutline} size={1} color={"#facc15"}/>
             </div>
         </>}
             break;
         case "Delayed": {return<>
-            <div className="w-full h-full border-[3px] flex justify-center items-center
-            border-orange-500 rounded-lg">
+            <div className={`w-full h-full border-[3px] flex justify-center items-center
+            border-orange-500 ${radius}`}>
                 <Icon path={mdiClockAlertOutline} size={1} color={"#f97316"}/>
             </div>
         </>}
             break;
         case "Canceled": return<>
-        <div className="w-full h-full border-[3px] flex justify-center items-center
-         border-red-600 rounded-lg">
+        <div className={`w-full h-full border-[3px] flex justify-center items-center
+         border-red-600 ${radius}`}>
             <Icon path={mdiClose} size={1} color={"#dc2626"}/>
         </div>
     </>
             break;
         case "None": {return<>
-            <div className="w-full h-full border-[3px] flex justify-center items-center
-            border-slate-400 rounded-lg">
+            <div className={`w-full h-full border-[3px] flex justify-center items-center
+            border-slate-400 ${radius}`}>
                 <Icon path={mdiDotsHorizontal} size={1} color={"#94a3b8"}/>
             </div>
         </>}

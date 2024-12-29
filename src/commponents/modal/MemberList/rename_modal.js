@@ -26,6 +26,8 @@ const Modal = () => {
 
     const [selectedItem, setSelectedItem] = useState({})
     const [newItemName, setNewItemName] = useState("")
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
 
     if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "rename"){
@@ -45,6 +47,9 @@ const Modal = () => {
             setSelectedItem(store.getState().entities.shoppingListReducer.members[index])
 
             setNewItemName(store.getState().entities.modalReducer.membersModal.name)
+
+            const newL = store.getState().entities.languagesReducer.currentL
+            if(language != newL) setLanguage(newL)
         })
     }
 
@@ -103,7 +108,10 @@ const Modal = () => {
             bg-slate-50
             font-semibold text-sm text-sky-400
             ">
-                New item
+                {
+                    (language == "en") ? "New member" : (
+                    (language == "cz") ? "Nový člen" : "New member")
+                }
             </div>}
             <div 
             className="
@@ -165,7 +173,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Rename item
+                    {
+                        (language == "en") ? "Rename member" : (
+                        (language == "cz") ? "Přejmenovat člena" : "Rename member")
+                    }
                 </div>
 
                 {/* modal body */}
@@ -196,7 +207,12 @@ return<>
                         <div className="
                         w-full h-fit pt-6
                         ">
-                            <div className="font-semibold">new name:</div>
+                            <div className="font-semibold">
+                                {
+                                    (language == "en") ? "new name:" : (
+                                    (language == "cz") ? "nové jméno:" : "new name:")
+                                }
+                            </div>
                             <div className="w-full h-10 border-2 border-slate-200 rounded-lg">
                                 <FormChangeMemberName/>
                             </div>
@@ -221,7 +237,11 @@ return<>
                             <div className="absolute -top-[10px] left-2 bg-slate-50">
                                 <Icon path={mdiClose} size={0.75}/>
                             </div>
-                            Cancel
+                            {
+                                (language == "en") ? "Cancel" : (
+                                    (language == "cz") ? "Zrušit" : "Cancel"
+                                )
+                            }
                         </button>
 
                         <div className="grow"/>
@@ -242,7 +262,11 @@ return<>
                             <div className="absolute -top-[10px] right-2 bg-slate-50">
                                 <Icon path={mdiCheck} size={0.75}/>
                             </div>
-                            Confirm
+                            {
+                                (language == "en") ? "Confirm" : (
+                                    (language == "cz") ? "Potvrdit" : "Confirm"
+                                )
+                            }
                         </button>
                     </div>
 

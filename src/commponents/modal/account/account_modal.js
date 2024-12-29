@@ -15,10 +15,31 @@ const Modal = () => {
     const [userArr, setUserArr] = useState(store.getState().entities.userAccountsReducer.userAccounts)
     const [currentUserName, setCurrentUseName] = useState(store.getState().entities.userReducer.name)
 
+    const [themeR, setThemeR] = useState(store.getState().entities.themeReducer)
+    const [currentTheme, setCurrentTheme] = useState(null)
+
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
+    
+
+    useEffect(() => {
+        const mode = store.getState().entities.themeReducer.currentMode
+        setCurrentTheme(themeR[mode])
+    },[])
 
     store.subscribe(() => {
         setUserArr(store.getState().entities.userAccountsReducer.userAccounts)
         setCurrentUseName(store.getState().entities.userReducer.name)
+
+        if(store.getState().entities.themeReducer != themeR) {
+            const reducer = store.getState().entities.themeReducer
+            setThemeR(reducer)
+            if(typeof mode == "string") setCurrentTheme(themeR[reducer.currentMode])
+            if(typeof mode == "number") setCurrentTheme(themeR["customMode"][reducer.currentMode])
+        }
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })  
 
 
@@ -84,7 +105,7 @@ return<>
     w-full h-full
     relative
     ">
-        <div className=" absolute w-full h-full bg-slate-600/35">
+        <div className={` absolute w-full h-full bg-slate-600/35 `}>
             <SpaceQuitButton toDefault={true}/>
         </div>
         <div className="
@@ -107,7 +128,7 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Account
+                    {(language == "en") ? "Account" : (languageR[language].Account)}
                 </div>
 
                 {/* 2 modal content - users */}
@@ -116,11 +137,21 @@ return<>
                 flex-col justify-center
                 ">
                     <div className="pb-4 font-semibold">
-                        Current user: {currentUserName != "Account" ? currentUserName : "None"}
+                        {(language == "en") ? "Current user: " : (
+                            (language == "cz") ? "Aktuální uživatel:" : "Current user: "
+                        )}
+                        {" "}
+                        {(currentUserName != "Account" && currentUserName != "") ? currentUserName : (
+                            (language == "en") ? "None" : (
+                                (language == "cz") ? "Žádný" : "None"
+                            )
+                        )}
                     </div>
 
                     <div className="font-semibold ">
-                        login as:
+                        {(language == "en") ? "login as: " : (
+                            (language == "cz") ? "přihlásit se jako:" : "login as: "
+                        )}
                     </div>
 
                     {userArr.map((e) => <div>

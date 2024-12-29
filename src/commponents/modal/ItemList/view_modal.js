@@ -17,7 +17,8 @@ const Modal = () => {
     const store = useStore()
 
     const [selectedItem, setSelectedItem] = useState({})
-    // const [selectedDsc, setSelectedDsc] = useState("")
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
     useEffect(() => {
         const itemIndex = store.getState().entities.shoppingListReducer.updateItem.selectedItem
@@ -30,7 +31,6 @@ const Modal = () => {
             }
         }
         setSelectedItem(store.getState().entities.shoppingListReducer.items[index])
-        // setSelectedDsc(store.getState().entities.shoppingListReducer.items[index].dsc)
     })
 
 if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "view"){
@@ -47,8 +47,9 @@ if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "view"
             }
         }
         setSelectedItem(store.getState().entities.shoppingListReducer.items[index])
-        // setSelectedDsc(store.getState().entities.shoppingListReducer.items[index].dsc)
-        
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })
 }
 
@@ -80,7 +81,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    View item
+                    {
+                        (language == "en") ? "View item" : (
+                        (language == "cz") ? "Zobrazení položky" : "View item")
+                    }
                 </div>
 
                 {/* modal body */}
@@ -93,7 +97,12 @@ return<>
                     w-full h-fit -translate-y-4
                     ">
                         {/* Name */}
-                        <div className="font-semibold">name:</div>
+                        <div className="font-semibold">
+                            {
+                                (language == "en") ? "name:" : (
+                                (language == "cz") ? "jméno:" : "name:")
+                            }
+                        </div>
                         <div className="
                         w-full h-10 flex">
                             <div className="
@@ -111,7 +120,12 @@ return<>
                         </div>
 
                         {/* Cost per item */}
-                        <div className="pt-2 font-semibold">cost per item:</div>
+                        <div className="pt-2 font-semibold">
+                            {
+                                (language == "en") ? "cost per item:" : (
+                                (language == "cz") ? "cena za položku:" : "cost per item:")
+                            }
+                        </div>
                         <div className="w-full h-10 flex">
                             <div className="grow h-full border-2 border-slate-200 rounded-s-lg">
                                 <div className="
@@ -135,7 +149,12 @@ return<>
                         </div>
 
                         {/* Count */}
-                        <div className="font-semibold">count:</div>
+                        <div className="font-semibold">
+                            {
+                                (language == "en") ? "count:" : (
+                                (language == "cz") ? "počet:" : "count:")
+                            }
+                        </div>
                         <div className="
                         w-full h-10 border-2 border-slate-200 rounded-lg pl-2
                         flex items-center
@@ -145,7 +164,12 @@ return<>
                         </div>
 
                         {/* Description */}
-                        <div className="pt-2 font-semibold">description:</div>
+                        <div className="pt-2 font-semibold">
+                            {
+                                (language == "en") ? "description:" : (
+                                (language == "cz") ? "popis:" : "description:")
+                            }
+                        </div>
                         <div className="w-full h-[120px] border-2 border-slate-200 rounded-lg">
                             <textarea 
                             disabled
@@ -178,7 +202,11 @@ return<>
                         font-bold text-slate-400
                         relative
                         ">
-                            Cancel
+                            {
+                                (language == "en") ? "Cancel" : (
+                                    (language == "cz") ? "Zrušit" : "Cancel"
+                                )
+                            }
                         </button>
 
                         <div className="grow"/>

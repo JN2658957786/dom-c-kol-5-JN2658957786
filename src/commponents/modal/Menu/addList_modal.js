@@ -24,6 +24,8 @@ const Modal = () => {
     const [userID, setUserID] = useState(store.getState().entities.userReducer.id)
     const [userName, setUserName] = useState(store.getState().entities.userReducer.name)
     const [shoppingListName, setShoppingListName] = useState(store.getState().entities.modalReducer.shoppingListModal.name)
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
 
 if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "addList"){
@@ -31,6 +33,9 @@ if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "addLi
         setUserID(store.getState().entities.userReducer.id)
         setUserName(store.getState().entities.userReducer.name)
         setShoppingListName(store.getState().entities.modalReducer.shoppingListModal.name)
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })
 }
 
@@ -132,7 +137,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Create new shopping list
+                    {
+                        (language == "en") ? "Create new shopping list" : (
+                        (language == "cz") ? "Vytvořte nový nákupní seznam" : "Create new shopping list")
+                    }
                 </div>
 
                 {/* modal body */}
@@ -178,7 +186,12 @@ return<>
                     w-full h-fit pt-4
                     ">
                         {/* Name */}
-                        <div className="font-semibold">name:</div>
+                        <div className="font-semibold">
+                            {
+                                (language == "en") ? "name:" : (
+                                (language == "cz") ? "jméno:" : "name:")
+                            }
+                        </div>
                         <div className="w-full h-10 border-2 border-slate-200 rounded-lg">
                             <FormChangeListName/>
                         </div>
@@ -202,7 +215,11 @@ return<>
                             <div className="absolute -top-[10px] left-2 bg-slate-50">
                                 <Icon path={mdiClose} size={0.75}/>
                             </div>
-                            Cancel
+                            {
+                                (language == "en") ? "Cancel" : (
+                                    (language == "cz") ? "Zrušit" : "Cancel"
+                                )
+                            }
                         </button>
 
                         <div className="grow"/>
@@ -223,7 +240,11 @@ return<>
                             <div className="absolute -top-[10px] right-2 bg-slate-50">
                                 <Icon path={mdiCheck} size={0.75}/>
                             </div>
-                            Confirm
+                            {
+                                (language == "en") ? "Confirm" : (
+                                    (language == "cz") ? "Potvrdit" : "Confirm"
+                                )
+                            }
                         </button>
                     
                     </div>

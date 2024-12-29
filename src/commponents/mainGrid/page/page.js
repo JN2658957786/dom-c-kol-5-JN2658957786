@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2"
 import { useStore } from 'react-redux'
 
@@ -14,18 +14,35 @@ export default function(){
     const heightCalc = `calc(100vh - 60px - 48px - 56px - 15px - ${py}px )`
 
     const [openTab, setOpenTab] = useState("Shopping list")
+
+    const [themeR, setThemeR] = useState(store.getState().entities.themeReducer)
+    const [currentTheme, setCurrentTheme] = useState(null)
+
+
+    useEffect(() => {
+        const mode = store.getState().entities.themeReducer.currentMode
+        setCurrentTheme(themeR[mode])
+    })
+
     store.subscribe(() => {
-        setOpenTab(store.getState().entities.tabsReducer.openTab)
+        const newTab = store.getState().entities.tabsReducer.openTab
+        if(openTab != newTab) setOpenTab(newTab)
+
+        if(store.getState().entities.themeReducer != themeR) {
+            const reducer = store.getState().entities.themeReducer
+            setThemeR(reducer)
+            setCurrentTheme(themeR[reducer.currentMode])
+        }
     })
 
 return<>
-    <div className="
+    {currentTheme && <div className={`
     w-full h-full
-    border-2 border-sky-400
+    border-2 ${currentTheme.border}
     rounded-xl
     overflow-hidden
     flex justify-center items-start
-    ">
+    `}>
         <div className="
         w-full h-full px-1 py-4
         border-2 border-white/0
@@ -47,5 +64,5 @@ return<>
                 }
                 
         </div>
-    </div>
+    </div>}
 </>}

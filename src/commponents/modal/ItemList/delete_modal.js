@@ -19,6 +19,8 @@ const Modal = () => {
     const store = useStore()
 
     const [selectedItem, setSelectedItem] = useState({})
+    const [languageR, setLanguageR] = useState(store.getState().entities.languagesReducer)
+    const [language, setLanguage] = useState(store.getState().entities.languagesReducer.currentL)
 
 if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "delete"){
     store.subscribe(() => {
@@ -34,6 +36,9 @@ if(store.getState().entities.shoppingListReducer.updateItem.updateMode == "delet
             }
         }
         setSelectedItem(store.getState().entities.shoppingListReducer.items[index])
+
+        const newL = store.getState().entities.languagesReducer.currentL
+        if(language != newL) setLanguage(newL)
     })
 }
 
@@ -92,7 +97,10 @@ return<>
                 flex justify-center
                 font-bold text-lg
                 ">
-                    Delete item
+                    {
+                        (language == "en") ? "Delete item" : (
+                        (language == "cz") ? "Smazat položku" : "Delete item")
+                    }
                 </div>
 
                 {/* modal body */}
@@ -109,7 +117,10 @@ return<>
                         w-full h-8
                         font-semibold
                         ">
-                            Are you sure you want to delete this item?
+                            {
+                                (language == "en") ? "Are you sure you want to delete this item?" : (
+                                (language == "cz") ? "Opravdu chcete tuto položku smazat?" : "Are you sure you want to delete this item?")
+                            }
                         </div>
 
                         {/* item to delete */}
@@ -155,7 +166,11 @@ return<>
                             <div className="absolute -top-[10px] left-2 bg-slate-50">
                                 <Icon path={mdiClose} size={0.75}/>
                             </div>
-                            Cancel
+                            {
+                                (language == "en") ? "Cancel" : (
+                                    (language == "cz") ? "Zrušit" : "Cancel"
+                                )
+                            }
                         </button>
 
                         <div className="grow"/>
@@ -176,7 +191,11 @@ return<>
                             <div className="absolute -top-[10px] right-2 bg-slate-50">
                                 <Icon path={mdiDeleteOutline} size={0.75}/>
                             </div>
-                            Delete
+                            {
+                                (language == "en") ? "Delete" : (
+                                    (language == "cz") ? "Vymazat" : "Delete"
+                                )
+                            }
                         </button>
                     
                     </div>
